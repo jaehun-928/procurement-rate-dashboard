@@ -336,7 +336,7 @@ with tab_daily:
             row={"공시일":d,"채권":PRODUCTS[product]}
             for p in selected_providers:
                 r=next((r for r in recs if r.get("provider")==p),None)
-            row[PROVIDER_NAMES[p]]=format_rate(rate(r))
+                row[PROVIDER_NAMES[p]]=format_rate(rate(r))
             row["평균/조회값"]=format_rate(current) if current is not None else "확인필요: "+("누락 "+", ".join(PROVIDER_NAMES[p] for p in missing) if missing else "원자료 확인")
             row["전일 대비"]=f"{change:+.1f}bp" if change is not None else "확인필요: "+("; ".join(reasons) or "비교값 없음")
             row["상태"]="정상" if not missing else "확인필요: "+reasons[0]
