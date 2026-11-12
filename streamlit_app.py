@@ -188,14 +188,16 @@ persistence_label = st.session_state.persistence_label
 
 today = kst_today()
 month_start = today.replace(day=1)
-month_dates = [d for d in get_dates(db, month_start.isoformat(), today.isoformat(), list(PRODUCTS))]
+all_dates = get_dates(db, "0001-01-01", today.isoformat(), list(PRODUCTS))
+month_dates = [d for d in all_dates if month_start.isoformat() <= d <= today.isoformat()]
 latest = date.fromisoformat(month_dates[-1]) if month_dates else today
+earliest = date.fromisoformat(all_dates[0]) if all_dates else date(2026, 1, 1)
 
 with st.sidebar:
     st.header("조회 조건")
     default_start = month_start
-    start_date = st.date_input("조회 시작일", value=default_start, min_value=month_start, max_value=today)
-    end_date = st.date_input("조회 종료일", value=latest, min_value=month_start, max_value=today)
+    start_date = st.date_input("조회 시작일", value=default_start, min_value=earliest, max_value=today)
+    end_date = st.date_input("조회 종료일", value=latest, min_value=earliest, max_value=today)
     product_label = st.selectbox("채권", list(PRODUCT_OPTIONS.keys()))
     avg_options = ["3사 평균", "4사 평균", *PROVIDER_NAMES.values()]
     avg_mode = st.selectbox("조회 방식", avg_options)
